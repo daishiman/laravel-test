@@ -20,8 +20,19 @@ class BlogViewControllerTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
+        $response->assertViewIs('index');
         $response->assertSee($blog1->title);
         $response->assertSee($blog2->title);
         $response->assertSee($blog3->title);
+
+        // Blog::factory()->create(['title' => 'abcde']);
+        // Blog::factory()->create(['title' => 'fghij']);
+        // Blog::factory()->create(['title' => 'klmno']);
+
+        // $response = $this->get('/');
+        // $response->assertOk();
+        // $response->assertSee('abcde');
+        // $response->assertSee('fghij');
+        // $response->assertSee('klmno');
     }
 }
