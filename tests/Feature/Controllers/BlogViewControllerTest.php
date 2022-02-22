@@ -2,10 +2,11 @@
 
 namespace Tests\Feature\Controllers;
 
-use App\Models\Blog;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\Blog;
+use App\Models\User;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BlogViewControllerTest extends TestCase
 {
@@ -25,6 +26,7 @@ class BlogViewControllerTest extends TestCase
         $response->assertSee($blog2->title);
         $response->assertSee($blog3->title);
 
+        // タイトルを上書きできる
         // Blog::factory()->create(['title' => 'abcde']);
         // Blog::factory()->create(['title' => 'fghij']);
         // Blog::factory()->create(['title' => 'klmno']);
@@ -34,5 +36,15 @@ class BlogViewControllerTest extends TestCase
         // $response->assertSee('abcde');
         // $response->assertSee('fghij');
         // $response->assertSee('klmno');
+    }
+
+    /** factory の観察  */
+    public function factoryの観察()
+    {
+        $blog = Blog::factory()->create();
+
+        var_dump($blog->toArray());
+
+        var_dump(User::get()->toArray());
     }
 }
