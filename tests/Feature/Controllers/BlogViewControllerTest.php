@@ -26,6 +26,7 @@ class BlogViewControllerTest extends TestCase
         $response->assertSee($blog2->title);
         $response->assertSee($blog3->title);
 
+        // タイトルを上書きできる
         // Blog::factory()->create(['title' => 'abcde']);
         // Blog::factory()->create(['title' => 'fghij']);
         // Blog::factory()->create(['title' => 'klmno']);
