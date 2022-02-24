@@ -29,4 +29,11 @@ class BlogFactory extends Factory
             'status' => $this->faker->biasedNumberBetween(0, 1, ['\Faker\Provider\Biased', 'linearHigh']),
         ]);
     }
+
+    public function closed()
+    {
+        return $this->state([
+            'status' => Blog::CLOSED,
+        ]);
+    }
 }
