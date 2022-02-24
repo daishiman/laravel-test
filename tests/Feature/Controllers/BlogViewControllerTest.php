@@ -14,9 +14,9 @@ class BlogViewControllerTest extends TestCase
     /** @test index */
     public function ブログのTOPページを開ける()
     {
-        $blog1 = Blog::factory()->create();
-        $blog2 = Blog::factory()->create();
-        $blog3 = Blog::factory()->create();
+        $blog1 = Blog::factory()->hasComments(1)->create();
+        $blog2 = Blog::factory()->hasComments(3)->create();
+        $blog3 = Blog::factory()->hasComments(2)->create();
 
         $response = $this->get('/');
 
@@ -29,6 +29,10 @@ class BlogViewControllerTest extends TestCase
         $response->assertSee($blog1->user->name);
         $response->assertSee($blog2->user->name);
         $response->assertSee($blog3->user->name);
+
+        $response->assertSee('(1件のコメント)');
+        $response->assertSee('(3件のコメント)');
+        $response->assertSee('(2件のコメント)');
         // タイトルを上書きできる
         // Blog::factory()->create(['title' => 'abcde']);
         // Blog::factory()->create(['title' => 'fghij']);
