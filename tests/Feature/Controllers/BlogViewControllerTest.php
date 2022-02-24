@@ -26,6 +26,9 @@ class BlogViewControllerTest extends TestCase
         $response->assertSee($blog2->title);
         $response->assertSee($blog3->title);
 
+        $response->assertSee($blog1->user->name);
+        $response->assertSee($blog2->user->name);
+        $response->assertSee($blog3->user->name);
         // タイトルを上書きできる
         // Blog::factory()->create(['title' => 'abcde']);
         // Blog::factory()->create(['title' => 'fghij']);
@@ -46,5 +49,7 @@ class BlogViewControllerTest extends TestCase
         var_dump($blog->toArray());
 
         var_dump(User::get()->toArray());
+
+        $this->assertTrue(true);
     }
 }
