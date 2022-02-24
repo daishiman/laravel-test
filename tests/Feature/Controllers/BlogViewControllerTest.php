@@ -33,6 +33,8 @@ class BlogViewControllerTest extends TestCase
         $response->assertSee('(1件のコメント)');
         $response->assertSee('(3件のコメント)');
         $response->assertSee('(2件のコメント)');
+
+        $response->assertSeeInOrder([$blog2->title, $blog3->title, $blog1->title]);
         // タイトルを上書きできる
         // Blog::factory()->create(['title' => 'abcde']);
         // Blog::factory()->create(['title' => 'fghij']);
