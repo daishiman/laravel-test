@@ -50,10 +50,11 @@ class BlogViewControllerTest extends TestCase
     /** @test index  */
     public function ブログの一覧、非公開のブログは表示されない()
     {
-        Blog::factory()->create([
-            'status' => Blog::CLOSED,
-            'title'  => 'ブログA',
-        ]);
+        Blog::factory()
+            ->closed()
+            ->create([
+                'title'  => 'ブログA',
+            ]);
         Blog::factory()->create(['title' => 'ブログB']);
         Blog::factory()->create(['title' => 'ブログC']);
 
@@ -64,27 +65,32 @@ class BlogViewControllerTest extends TestCase
         $response->assertSee('ブログC');
     }
 
+    /** @test show */
+    public function ブログの詳細画面が表示できる()
+    {
+        $blog = Blog::factory()->create();
+
+        $response = $this->get('blogs/' . $blog->id);
+
+        $response->assertOk();
+        $response->assertSee($blog->title);
+        $response->assertSee($blog->user->name);
+    }
+
+    /** @test show */
+    public function ブログの非公開は詳細画面が表示できない()
+    {
+        $blog = Blog::factory()->closed()->create();
+
+        $response = $this->get('blogs/' . $blog->id);
+
+        $response->assertForbidden();
+    }
+
     /** @test factory の観察  */
     public function factoryの観察()
     {
         $blog = Blog::factory()->create();
         $this->assertTrue(true);
-    }
-
-    /** @test scopeOnlyOpen  */
-    public function ブログの公開・非公開のscope()
-    {
-        $blog1 = Blog::factory()->create([
-            'status' => Blog::CLOSED,
-            'title'  => 'ブログA',
-        ]);
-        $blog2 = Blog::factory()->create(['title' => 'ブログB']);
-        $blog3 = Blog::factory()->create(['title' => 'ブログC']);
-
-        $blogs = Blog::onlyOpen()->get();
-
-        $this->assertFalse($blogs->contains($blog1));
-        $this->assertTrue($blogs->contains($blog2));
-        $this->assertTrue($blogs->contains($blog3));
     }
 }
