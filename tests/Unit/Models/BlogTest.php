@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
+use Illuminate\Support\Carbon;
 
 class BlogTest extends TestCase
 {
@@ -46,6 +46,26 @@ class BlogTest extends TestCase
         $this->assertFalse($blogs->contains($blog1));
         $this->assertTrue($blogs->contains($blog2));
         $this->assertTrue($blogs->contains($blog3));
+    }
+
+    /** @test show */
+    public function クリスマスの日は、メリークリスマス！と表示される()
+    {
+        $blog = Blog::factory()->create();
+
+        Carbon::setTestNow('2020-12-24');
+
+        $response = $this->get('blogs/' . $blog->id);
+
+        $response->assertOk();
+        $response->assertDontSee('メリークリスマス！');
+
+        Carbon::setTestNow('2020-12-25');
+
+        $response = $this->get('blogs/' . $blog->id);
+
+        $response->assertOk();
+        $response->assertSee('メリークリスマス！');
     }
 
     /** @test isClosed */
