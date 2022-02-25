@@ -51,4 +51,33 @@ class SignUpControllerTest extends TestCase
 
         $this->assertTrue(Hash::check('abcd1234', $user->password));
     }
+
+    /**
+     * @test store
+     */
+    public function 不正なデータでは登録できない()
+    {
+        $url = 'signup';
+
+        $this->from($url)
+            ->post($url, [])
+            ->assertRedirect($url);
+
+        app()->setlocale('testing');
+
+        $this->post($url, ['name' => ''])->assertSessionHasErrors(['name' => 'required']);
+        $this->post($url, ['name' => str_repeat('あ', 21)])->assertSessionHasErrors(['name' => 'max']);
+        $this->post($url, ['name' => str_repeat('あ', 20)])->assertSessionDoesntHaveErrors(['name']);
+
+        $this->post($url, ['email' => ''])->assertSessionHasErrors(['email' => 'required']);
+        $this->post($url, ['email' => 'aa@ff@com'])->assertSessionHasErrors(['email' => 'email']);
+        $this->post($url, ['email' => 'aa@ああ@com'])->assertSessionHasErrors(['email' => 'email']);
+
+        User::factory()->create(['email' => 'aa@bbb.com']);
+        $this->post($url, ['email' => 'aa@bbb.com'])->assertSessionHasErrors(['email' => 'unique']);
+
+        $this->post($url, ['password' => ''])->assertSessionHasErrors(['password' => 'required']);
+        $this->post($url, ['password' => 'abcd123'])->assertSessionHasErrors(['password' => 'min']);
+        $this->post($url, ['password' => 'abcd1234'])->assertSessionDoesntHaveErrors('password');
+    }
 }

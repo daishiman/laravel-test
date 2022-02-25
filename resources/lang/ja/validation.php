@@ -27,7 +27,7 @@ return [
     'between'              => [
         'numeric' => ':attributeは、:minから:maxの間で指定してください。',
         'file'    => ':attributeは、:min kBから、:max kBの間で指定してください。',
-        'string'  => ':attributeは、:min文字から、:max文字の間で指定してください。',
+        'string'  => ':attributeは、:min文字から、:文字の間でmax指定してください。',
         'array'   => ':attributeは、:min個から:max個の間で指定してください。',
     ],
     'boolean'              => ':attributeは、trueかfalseを指定してください。',
@@ -153,6 +153,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name'     => '名前',
+        'email'    => 'メールアドレス',
+        'password' => 'パスワード'
+    ],
 
 ];
