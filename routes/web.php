@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BlogViewController;
 use App\Http\Controllers\SignUpController;
+use App\Http\Controllers\BlogViewController;
+use App\Http\Controllers\Mypage\UserLoginController;
 
 Route::get('/', [BlogViewController::class, 'index']);
 Route::get('blogs/{blog}', [BlogViewController::class, 'show']);
