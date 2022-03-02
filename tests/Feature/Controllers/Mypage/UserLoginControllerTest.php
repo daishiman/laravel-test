@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers\Mypage;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
@@ -128,5 +129,69 @@ class UserLoginControllerTest extends TestCase
             ->post($url, $postData)
             ->assertSee('メールアドレスかパスワードが間違っています。')
             ->assertSee('<h1>ログイン画面</h1>', false);
+    }
+
+    /**
+     * @test login
+     */
+    public function 認証エラーなのでvalidationExceptionの例がが発生する()
+    {
+        $this->withoutExceptionHandling();
+
+        $postData = [
+            'email' => 'aaa@test.com',
+            'password' => 'abce1234',
+        ];
+
+        // $dbData = [
+        //     'email' => 'aaa@test.com',
+        //     'password' => bcrypt('abce1234'),
+        // ];
+
+        // $user = User::factory()->create($dbData);
+
+        // $this->expectException(ValidationException::class);
+        try {
+            $this->post('mypage/login', $postData);
+            $this->fail('validationExceptionの例外が発生しませんでしたよ。');
+        } catch (ValidationException $e) {
+            $this->assertEquals(
+                'メールアドレスかパスワードが間違っています。',
+                $e->errors()['email'][0] ?? ''
+            );
+        }
+    }
+
+    /**
+     * @test login
+     */
+    public function 認証OKなのでvalidationExceptionの例外が出ない()
+    {
+        $this->withoutExceptionHandling();
+
+        $postData = [
+            'email' => 'aaa@test.com',
+            'password' => 'abce1234',
+        ];
+
+        $dbData = [
+            'email' => 'aaa@test.com',
+            'password' => bcrypt('abce1234'),
+        ];
+
+        $user = User::factory()->create($dbData);
+
+        // $this->expectException(ValidationException::class);
+        try {
+            $this->post('mypage/login', $postData);
+            $this->assertTrue(true);
+        } catch (ValidationException $e) {
+            $this->fail('validationExceptionの例外が発生しましました。');
+
+            $this->assertEquals(
+                'メールアドレスかパスワードが間違っています。',
+                $e->errors()['email'][0] ?? ''
+            );
+        }
     }
 }
