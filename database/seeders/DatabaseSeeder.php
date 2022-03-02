@@ -26,5 +26,11 @@ class DatabaseSeeder extends Seeder
                         ->create(['blog_id' => $blog]);
                 });
         });
+
+        User::first()->updated([
+            'name' => '万壽本',
+            'email' => 'daishimanju@gmail.com',
+            'password' => bcrypt('abcd1234'),
+        ]);
     }
 }

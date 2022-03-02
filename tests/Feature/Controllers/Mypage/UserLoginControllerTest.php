@@ -194,4 +194,23 @@ class UserLoginControllerTest extends TestCase
             );
         }
     }
+
+    /**
+     * @test logout
+     */
+    public function ログアウトできる()
+    {
+        $login  = 'mypage/login';
+        $logout = 'mypage/logout';
+
+        $this->login();
+
+        $this->post($logout)
+            ->assertRedirect($login);
+
+        $this->get($login)
+            ->assertSee('ログアウトしました。');
+
+        $this->assertGuest();
+    }
 }
