@@ -134,7 +134,7 @@ class UserLoginControllerTest extends TestCase
     /**
      * @test login
      */
-    public function 認証エラーなのでvalidationExceptionの例がが発生する()
+    public function 認証エラーなのでvalidationExceptionの例外が発生する()
     {
         $this->withoutExceptionHandling();
 
