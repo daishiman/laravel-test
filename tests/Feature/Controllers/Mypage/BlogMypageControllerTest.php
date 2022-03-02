@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers\Mypage;
 
 use Tests\TestCase;
+use App\Models\Blog;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,21 +17,29 @@ class BlogMypageControllerTest extends TestCase
     /**
      * @test index
      */
-    public function 認証している場合に限りマイページを開ける()
+    public function ゲストはブログを管理できない()
     {
-        // 認証していない場合
+        $urlBlogs = 'mypage/blogs';
+        $urlLogin = 'mypage/login';
+
+        $this->get($urlBlogs)
+            ->assertRedirect($urlLogin);
+    }
+
+    /**
+     * @test index
+     */
+    public function マイページ、ブログ一覧で自分のデータのみ表示される()
+    {
+        $user = $this->login();
+
+        $otherBlog = Blog::factory()->create();
+
+        $myBlog = Blog::factory()->create(['user_id' => $user]);
+
         $this->get('mypage/blogs')
-            ->assertRedirect('mypage/login');
-
-        // 認証済みの場合
-        // $user = User::factory()->create();
-
-        // $this->actingAs($user)
-        //     ->get('mypage/blogs')
-        //     ->assertOk();
-        $this->login();
-
-        $this->get('mypage/blogs')
-            ->assertOk();
+            ->assertOk()
+            ->assertDontSee($otherBlog->title)
+            ->assertSee($myBlog->title);
     }
 }
