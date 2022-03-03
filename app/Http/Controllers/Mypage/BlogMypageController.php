@@ -25,10 +25,7 @@ class BlogMypageController extends Controller
     {
         // $data = $request->all(['title', 'body']);
 
-        $data = $request->validate([
-            'title' => ['required', 'max:255'],
-            'body' => ['required', 'max:255'],
-        ]);
+        $data = $this->validateInput();
 
         $data['status'] = $request->boolean('status');
 
@@ -46,5 +43,25 @@ class BlogMypageController extends Controller
         $data = old() ?: $blog;
 
         return view('mypage.blog.edit', compact('blog', 'data'));
+    }
+
+    public function update(Blog $blog, Request $request)
+    {
+        $data = $this->validateInput();
+
+        $data['status'] = $request->boolean('status');
+
+        $blog->update($data);
+
+        return redirect(route('mypage.blog.edit', $blog))
+            ->with('status', 'ブログを更新しました');
+    }
+
+    public function validateInput()
+    {
+        return request()->validate([
+            'title' => ['required', 'max:255'],
+            'body' => ['required', 'max:255'],
+        ]);
     }
 }
