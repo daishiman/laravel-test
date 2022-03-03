@@ -24,6 +24,9 @@ class BlogMypageControllerTest extends TestCase
 
         $this->get($urlBlogs)
             ->assertRedirect($urlLogin);
+
+        $this->get('mypage/blogs/create')
+            ->assertRedirect($urlLogin);
     }
 
     /**
@@ -34,12 +37,22 @@ class BlogMypageControllerTest extends TestCase
         $user = $this->login();
 
         $otherBlog = Blog::factory()->create();
-
-        $myBlog = Blog::factory()->create(['user_id' => $user]);
+        $myBlog    = Blog::factory()->create(['user_id' => $user]);
 
         $this->get('mypage/blogs')
             ->assertOk()
             ->assertDontSee($otherBlog->title)
             ->assertSee($myBlog->title);
+    }
+
+    /**
+     * @test create
+     */
+    public function マイページ、ブログの新規登録画面を開ける()
+    {
+        $this->login();
+
+        $this->get('mypage/blogs/create')
+            ->assertOk();
     }
 }

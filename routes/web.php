@@ -18,4 +18,5 @@ Route::post('mypage/login', [UserLoginController::class, 'login']);
 Route::middleware('auth')->group(function () {
 	Route::post('mypage/logout', [UserLoginController::class, 'logout']);
 	Route::get('mypage/blogs', [BlogMypageController::class, 'index']);
+	Route::get('mypage/blogs/create', [BlogMypageController::class, 'create']);
 });

@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
                 });
         });
 
-        User::first()->updated([
+        User::first()->update([
             'name' => '万壽本',
             'email' => 'daishimanju@gmail.com',
             'password' => bcrypt('abcd1234'),
