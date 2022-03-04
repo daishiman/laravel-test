@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+use function PHPUnit\Framework\assertRegExp;
+
 /**
  * @see App\Http\Controllers\Mypage\BlogMypageController
  */
@@ -35,6 +37,9 @@ class BlogMypageControllerTest extends TestCase
             ->assertRedirect($urlLogin);
 
         $this->post('mypage/blogs/edit/1')
+            ->assertRedirect($urlLogin);
+
+        $this->delete('mypage/blogs/delete/1')
             ->assertRedirect($urlLogin);
     }
 
@@ -163,7 +168,30 @@ class BlogMypageControllerTest extends TestCase
      */
     public function 他人のブログは削除できない()
     {
-        $this->markTestIncomplete('まだ');
+        $blog = Blog::factory()->create();
+
+        $this->login();
+
+        $this->delete('mypage/blogs/delete/' . $blog->id)
+            ->assertForbidden();
+
+        $this->assertCount(1, Blog::all());
+    }
+
+    /**
+     * @test destroy
+     */
+    public function 自分のブログは削除できる()
+    {
+        $blog = Blog::factory()->create();
+
+        $this->login($blog->user);
+
+        $this->delete('mypage/blogs/delete/' . $blog->id)
+            ->assertRedirect('mypage/blogs');
+
+        $this->assertDatabaseMissing('blogs', ['id' => $blog->id]);
+        $this->assertDeleted($blog);
     }
 
     /**
