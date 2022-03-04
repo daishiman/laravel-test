@@ -111,9 +111,9 @@ class BlogMypageControllerTest extends TestCase
 
         $this->login();
 
-        // $this->from($urlCreate)
-        //     ->post($urlCreate, [])
-        //     ->assertRedirect($urlCreate);
+        $this->from($urlCreate)
+            ->post($urlCreate, [])
+            ->assertRedirect($urlCreate);
 
         app()->setlocale('testing');
 
@@ -121,7 +121,7 @@ class BlogMypageControllerTest extends TestCase
         $this->post($urlCreate, ['title' => str_repeat('a', 256)])->assertSessionHasErrors(['title' => 'max']);
         $this->post($urlCreate, ['title' => str_repeat('a', 255)])->assertSessionDoesntHaveErrors(['title' => 'max']);
 
-        $this->post($urlCreate, ['body' => ''])->assertSessionHasErrors(['body' => 'required']);
+
         $this->post($urlCreate, ['body' => str_repeat('a', 256)])->assertSessionHasErrors(['body' => 'max']);
         $this->post($urlCreate, ['body' => str_repeat('a', 255)])->assertSessionDoesntHaveErrors(['body' => 'max']);
     }
