@@ -47,11 +47,16 @@ class BlogMypageController extends Controller
 
     public function update(Blog $blog, Request $request)
     {
+        if ($request->user()->isNot($blog->user)) {
+            abort(403);
+        }
+
         $data = $this->validateInput();
 
         $data['status'] = $request->boolean('status');
 
         $blog->update($data);
+
 
         return redirect(route('mypage.blog.edit', $blog))
             ->with('status', 'ブログを更新しました');
