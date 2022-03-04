@@ -7,7 +7,7 @@ use App\Http\Controllers\Mypage\BlogMypageController;
 use App\Http\Controllers\Mypage\UserLoginController;
 
 Route::get('/', [BlogViewController::class, 'index']);
-Route::get('blogs/{blog}', [BlogViewController::class, 'show']);
+Route::get('blogs/{blog}', [BlogViewController::class, 'show'])->middleware('blog.show.limit');
 
 Route::get('signup', [SignUpController::class, 'index']);
 Route::post('signup', [SignUpController::class, 'store']);

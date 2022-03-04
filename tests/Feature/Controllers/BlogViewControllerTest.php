@@ -2,16 +2,20 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Http\Middleware\BlogShowLimit;
 use Tests\TestCase;
 use App\Models\Blog;
 use App\Models\User;
 use App\Models\Comment;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class BlogViewControllerTest extends TestCase
 {
     use RefreshDatabase;
+    // use WithoutMiddleware;
+
     /** @test index */
     public function ブログのTOPページを開ける()
     {
@@ -69,7 +73,9 @@ class BlogViewControllerTest extends TestCase
     /** @test show */
     public function ブログの詳細画面が表示でき、コメントが古い順に表示される()
     {
-        $blog = Blog::factory()->create();
+        // $this->withoutMiddleware(BlogShowLimit::class);
+
+        // $blog = Blog::factory()->create();
 
         // Comment::factory()->create([
         //     'created_at' => now()->sub('2 days'),
@@ -105,6 +111,8 @@ class BlogViewControllerTest extends TestCase
     /** @test show */
     public function ブログの非公開は詳細画面が表示できない()
     {
+        // $this->withoutMiddleware(BlogShowLimit::class);
+
         $blog = Blog::factory()->closed()->create();
 
         $response = $this->get('blogs/' . $blog->id);
